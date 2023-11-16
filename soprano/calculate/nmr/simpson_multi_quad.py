@@ -147,7 +147,7 @@ def write_spinsys_multi_quad(
         if field is None:
             p2f = 1
         else:
-            p2f = field * (nmr_gamma(atomsys,isotope_number) / 267522128.0)
+            p2f = abs(field*nmr_gamma(atomsys,isotope_number)/267522128.0)
 
         msiso = MSIsotropy.get(s, ref=ref, grad=grad)*p2f
         if not ms_iso:
