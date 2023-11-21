@@ -1,56 +1,63 @@
-# soprano
-Soprano - a Python library to crack crystals!
+# soprano* 
+> Working version for the implementation of the interface with Simpson
 
-## Introduction
-Soprano is a Python library developed and maintained by the CCP for NMR Crystallography as a tool to help scientists
-working with crystallography and simulations to generate, manipulate, run calculations on and analyse large data sets of
-crystal structures, with a particular attention to the output of ab-initio random structure searching, or [AIRSS](https://www.mtg.msm.cam.ac.uk/Codes/AIRSS). It provides a number of functionalities to help automate many common tasks in computational crystallography.
 
-## How to install
-Soprano is now available on the Python Package Index. You can install the latest stable release by using `pip`:
+## Installation
+1. Install the newest version of Python3 from www.python.org.
+2. Extract the Soprano folder, in the Terminal and inside the Soprano folder, run the command: `python3.xx setup.py install`.
 
-    pip install soprano --user
+## Using it
 
-In addition, you can get the latest version (not guaranteed to be stable) from github:
+For spin ½, use the script `MultiHalf.py`; for spin > ½, use the script `MultiQuad.py`.
 
-    git clone https://github.com/CCP-NC/soprano.git
-    pip install ./soprano --user
- 
-This approach should work even on machines on which one does not possess admin privileges (such as HPC clusters), as long as Python and `pip` are present.
+The `MultiQuad.py` (and similarly the `MultiHalf.py` – with the only difference is not having the `-gQ` argument) can be used with the following structure: 
 
-## Requirements
-Soprano has a few requirements that should be installed automatically by `pip` when used. Installing with `pip` is strongly advised. The core Soprano requirements are:
+```
+usage: MultiQuad.py [-h] [-m MAGRES_FILE] [-e ELEMENT] [-i ISOTOPE] [-b FIELD] [-c CS_ISO] [-d DET] [-np NP] [-sw SW] [-mas MAS] [-cr CRYSTAL_FILE] [-g GAMMA] [-gQ GRADQ] [-lb LB] [-zf ZEROFILL] [-xy OUTXY] [-p PLOT]
+```
+options:
+```
+-h	show this help message and exit
+-m	Magres file name/path. Default: "input.magres".
+-e	Element symbol eg. Na, C, O,... No default value, script will not run without it.
+-i	Isotope number, write as an integer eg. 1, 2, 3,... No default value, script will not run without it.
+-b	Magnet field strength in 1H Larmor Frequency and MHz.
+-c	Chemical shift treaded as isotropic, ie. no CSA.
+-d	Can be either "I1p" (I1+ detection operator) or "I1c" (central transition) detection. Integer spins do not have a central transition, so the detection operator must be "I1p". Default: "I1p".
+-np	Number of points in the simulated FID. Default: "1024".
+-sw	Spectral window, increase or decrease this value depending on the width of the signals (be careful with folding or really broad signals). Default: "40000".
+-mas	MAS rate. Default: "10000".
+-cr	Crystal file for sampling powder orientation, use either rep168 or rep320 for good MAS lineshape simulation. Default: "rep168".
+-g	Number of gamma angles, for MAS use between 30-50 and for static use 1. Default: "40".
+-gQ	Gradient for Cq, used in case of over or underestimation. This value will DIVIDE all the Cq values in the .magres file. Default value: "1.0".
+-lb	Line broadening (in Hz). Default value: "100".
+-zf	Zero filling. Default value: "8192".
+-xy	Name and path for the .xy output. Default: "simpson.xy".
+-p	Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".
+```
 
-* [Numpy](http://www.numpy.org/)
-* [Scipy](https://www.scipy.org/)
-* The [Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/)
+An example can be:
+`python3.11 MultiQuad.py -m input.magres -e Na -i 23 -gQ 1.00 -lb 300 -zf 4096 -xy output.xy -p True`
 
-Additional, optional requirements are `pyspglib` (used for spacegroup detection in `soprano.properties.symmetry` and `soprano.calculate.xrd`) and `paramiko` (used for remote SSH operation in `soprano.hpc.submitter`).
+The only thing you will need to edit in the MultiQuad.py file is the references and gradients lists for the isotopes in your system, there is no need for the list to have all the isotopes in your magres file, just the ones you want to simulate with Simpson.
 
-## Getting started
-Soprano ships with five Jupyter notebooks that illustrate its core functionality and how to use it. Being accustomed already with the use of `ase` - the Atomic Simulation Environment - is a good starting point. To use Jupyter notebooks you only need to have Jupyter installed, then launch the notebook server in the tutorials folder:
+``` 
+# Soprano references the chemical shift as ms_shifts = references + gradients * ms_shieldings [y(exp)=a.x(dft)+b].
+# List of references in ppm
+references = {'H': 30,
+              'C': 175,
+              'O': 300,
+              'Na': 500}
 
-    pip install jupyter
-    cd tutorials
-    jupyter notebook
-    
-Additional information is available in the auto-generated documentation in the docs folder, and the same information can be retrieved by using the Python `help` function.
+# List of gradients for the referencing
+gradients = {'H': -0.98,
+             'C': -1.00,
+             'O': -1.00,
+             'Na': -1.00}
+```
 
-## Functionality
-
-Here we show a basic rundown - not by any means exhaustive - of Soprano functionality and features.
-
-### Mass manipulation of structure datasets with AtomsCollection
-The AtomsCollection class generalises ASE's Atoms class by treating groups of structures together and making it easier to retrieve information about all of them at once. Combined with the large number of AtomProperties, which extract chemical and structural information and more, it provides a simple, powerful tool to look quickly at the results of an AIRSS search.
-
-### Accurate treatment of periodic boundaries
-Many functions in Soprano require to compute interatomic distances, such as when computing bonds, or estimating NMR dipolar couplings. Soprano always takes the utmost care in dealing with periodic boundaries, using algorithms that ensure that the closest periodic copies are always properly accounted for in a fast and efficient way. This approach can also be used in custom functions as the algorithm can be found in the function `soprano.utils.minimum_periodic`.
-
-### Easy processing of NMR parameters and spectral simulations
-ASE can read NMR parameters in the `.magres` file format, but Soprano can turn them to more meaningful physical quantities such as isotropies, anisotropies and asymmetries. In addition, with a full database of NMR active nuclei, Soprano can compute quadrupolar and dipolar couplings for specific isotopes. Finally, Soprano can produce a fast approximation of a powder spectrum - both MAS and static - in the diluted atoms approximation, or if that is not enough for your needs, provide an interface to NMR simulation software [Simpson](https://inano.au.dk/about/research-centers-and-projects/nmr/software/simpson).
-
-### Machine learning and phylogenetic analysis
-The `soprano.analyse.phylogen` module contains functionality to classify collections of structures based on relevant parameters of choice and identify similarities and patterns using Scipy's hierarchy and k-means clustering algorithms. This can be of great help when analysing collections of potential crystal structure looking for polymorphs, finding defect sites, or analysing disordered systems.
-
-### HPC Submitters
-Soprano provides a Submitter class, which can be inherited from by people with some experience in Python coding to create their own scripts running as background processes and able to process large amounts of calculations automatically. Files can be copied, sent to remote HPC machines, submitted for calculations to any of the major queue managing systems, and then downloaded back to the local machine - all or just the significant results, if space is an issue. While not the most user-friendly functionality provided by Soprano, Submitters have the potential to be extremely powerful tools that can save a lot of time when working with large batches of computations.
+If you need to change the path for your Simpson executable, you need to change the following section in the script.
+```
+# Run SIMPSON, you can change 'simpson' to your SIMPSON path.
+os.system("simpson simpson.in > simpson.log")
+```
