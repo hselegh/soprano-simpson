@@ -27,13 +27,14 @@ options:
 -np	Number of points in the simulated FID. Default: "1024".
 -sw	Spectral window, increase or decrease this value depending on the width of the signals (be careful with folding or really broad signals). Default: "40000".
 -mas	MAS rate. Default: "10000".
--cr	Crystal file for sampling powder orientation, use either rep168 or rep320 for good MAS lineshape simulation. Default: "rep168".
+-cr	Crystal file for sampling powder orientation. Default: "rep168".
 -g	Number of gamma angles, for MAS use between 30-50 and for static use 1. Default: "40".
 -gQ	Gradient for Cq, used in case of over or underestimation. This value will DIVIDE all the Cq values in the .magres file. Default value: "1.0".
 -lb	Line broadening (in Hz). Default value: "100".
 -zf	Zero filling. Default value: "8192".
 -xy	Name and path for the .xy output. Default: "simpson.xy".
 -p	Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".
+-core   Define the number of cores that Simpson will use. Default: "8".
 ```
 
 An example can be:

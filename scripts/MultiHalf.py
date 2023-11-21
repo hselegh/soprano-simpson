@@ -22,12 +22,13 @@ parser.add_argument('-d', dest='det', type=str, default="I1p", help='It should b
 parser.add_argument('-np', dest='np', type=str, default="1024", help='Number of points in the simulated FID. Default: "1024".')
 parser.add_argument('-sw', dest='sw', type=str, default="40000", help='Spectral window, increase or decrease this value depending on the width of the signals (be careful with folding or really broad signals). Default: "40000".')
 parser.add_argument('-mas', dest='mas', type=str, default="10000", help='MAS rate. Default: "10000".')
-parser.add_argument('-cr', dest='crystal_file', type=str, default="rep168", help='Crystal file for sampling powder orientation, use either rep168 or rep320 for good MAS lineshape simulation. Default: "rep168".')
+parser.add_argument('-cr', dest='crystal_file', type=str, default="rep168", help='Crystal file for sampling powder orientation. Default: "rep168".')
 parser.add_argument('-g', dest='gamma', type=str, default="40", help='Number of gamma angles, for MAS use between 30-50 and for static use 1. Default: "40".')
 parser.add_argument('-lb', dest='LB', type=str, default="100", help='Line broadening (in Hz). Default value: "100".')
 parser.add_argument('-zf', dest='ZeroFill', type=str, default="8192", help='Zero filling. Default value: "8192".')
 parser.add_argument('-xy', dest='outXY', type=str, default="simpson.xy", help='Name and path for the .xy output. Default: "simpson.xy".')
 parser.add_argument('-p', dest='plot', type=bool, default=False, help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
+parser.add_argument('-core', dest='cores', type=str, default="8", help='Define the number of cores that Simpson will use. Default: "8".')
 args = parser.parse_args()
 
 # Read .magres file - you can change "args.magres_file" to a default file name using 'filename'.
@@ -97,7 +98,7 @@ simp.pars ={
     "sw": args.sw,  # Spectral window, increase or decrease this value depending on
     # the width of the signals (be careful with folding or really broad signals).
     "spin_rate": args.mas,  # MAS rate.
-    #  "num_cores": "1",   # Uncomment if need to set a fixed number of cores. It will run in all cores as default.
+     "num_cores": args.cores,   # Uncomment if need to set a fixed number of cores. It will run in all cores as default.
     "crystal_file": args.crystal_file,  # Crystal file for sampling orientation,
     # use either rep168 or rep320 for good MAS lineshape simulation.
     "verbose": "111",  # Do not change.
