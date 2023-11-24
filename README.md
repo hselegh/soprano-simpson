@@ -35,6 +35,7 @@ options:
 -xy	Name and path for the .xy output. Default: "simpson.xy".
 -p	Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".
 -core   Define the number of cores that Simpson will use. Default: "8".
+-sod    Choose if write the files XSPEC and SPECTRA for use in the SOD package, write as True or False. Default: "False".
 ```
 
 An example can be:

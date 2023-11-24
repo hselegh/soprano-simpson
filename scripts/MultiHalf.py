@@ -29,7 +29,7 @@ parser.add_argument('-zf', dest='ZeroFill', type=str, default="8192", help='Zero
 parser.add_argument('-xy', dest='outXY', type=str, default="simpson.xy", help='Name and path for the .xy output. Default: "simpson.xy".')
 parser.add_argument('-p', dest='plot', type=bool, default=False, help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
 parser.add_argument('-core', dest='cores', type=str, default="8", help='Define the number of cores that Simpson will use. Default: "8".')
-parser.add_argument('-sod', dest='sod', type=bool, default=False, help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
+parser.add_argument('-sod', dest='sod', type=bool, default=False, help='Choose if write the files XSPEC and SPECTRA for use in the SOD package, write as True or False. Default: "False".')
 args = parser.parse_args()
 
 # Read .magres file - you can change "args.magres_file" to a default file name using 'filename'.
@@ -141,6 +141,7 @@ os.system("simpson simpson.in > simpson.log")
 # Delete the imaginary part of the file (third column) and write as a .xy file in ppm.
 simpson_xy_multi_half('simpson.spe', args.outXY)
 
+# Plots the spectrum - good for quickly checking the simulation.
 if args.plot is False:
     print("Job done!")
 else:
@@ -150,6 +151,7 @@ else:
     plt.plot(x, y,'r')
     plt.show()
 
+# Creates the files XSPEC and SPECTRA to be used in SOD (https://github.com/gcmt-group/sod).
 if args.sod is True:
     data_sod = np.loadtxt(args.outXY)
     x_sod = data_sod[:, 0]
