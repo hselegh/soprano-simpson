@@ -32,6 +32,7 @@ parser.add_argument('-zf', dest='ZeroFill', type=str, default="8192", help='Zero
 parser.add_argument('-xy', dest='outXY', type=str, default="simpson.xy", help='Name and path for the .xy output. Default: "simpson.xy".')
 parser.add_argument('-p', dest='plot', type=bool, default=False, help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
 parser.add_argument('-core', dest='cores', type=str, default="8", help='Define the number of cores that Simpson will use. Default: "8".')
+parser.add_argument('-sod', dest='sod', type=bool, default=False, help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
 args = parser.parse_args()
 
 # Read .magres file - you can change "args.magres_file" to a default file name using 'filename'.
@@ -159,3 +160,18 @@ else:
     y = data[:, 1]
     plt.plot(x, y,'r')
     plt.show()
+
+if args.sod is True:
+    data_sod = np.loadtxt(args.outXY)
+    x_sod = data_sod[:, 0]
+    y_sod = data_sod[:, 1]
+    np.savetxt('XSPEC',x_sod)
+    y_sodT = y_sod[None, :]
+    np.savetxt('SPECTRA',y_sodT)
+    with open('SPECTRA', 'r+') as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write(args.ZeroFill + '\n')
+        f.close()
+else:
+    pass
