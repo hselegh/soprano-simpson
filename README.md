@@ -1,5 +1,8 @@
 # soprano* 
-> Working version for the implementation of the interface with Simpson
+> Working version for the implementation of the interface with Simpson.
+
+The original version can be found in https://ccp-nc.github.io/soprano/intro.html and must be cited accordingly to https://ccp-nc.github.io/soprano/citing.html.
+
 
 
 ## Installation
@@ -35,7 +38,7 @@ options:
 -xy	Name and path for the .xy output. Default: "simpson.xy".
 -p	Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".
 -core   Define the number of cores that Simpson will use. Default: "8".
--sod    Choose if write the files XSPEC and SPECTRA for use in the SOD package, write as True or False. Default: "False".
+-sod    Choose if write the files XSPEC and SPECTRA for use in the SOD package (https://github.com/gcmt-group/sod), write as True or False. Default: "False".
 ```
 
 An example can be:
