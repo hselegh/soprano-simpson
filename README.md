@@ -1,6 +1,8 @@
 # soprano* 
 > Working version for the implementation of the interface with Simpson.
 
+### There is no guarantee that the code is working properly, use it at your own risk!
+
 The original version can be found in https://ccp-nc.github.io/soprano/intro.html and must be cited accordingly to https://ccp-nc.github.io/soprano/citing.html.
 
 This code is a modified version of the Soprano bleeding edge version that can be found in https://github.com/jkshenton/soprano/.
