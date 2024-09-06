@@ -156,13 +156,17 @@ if args.sod is True:
     data_sod = np.loadtxt(args.outXY)
     x_sod = data_sod[:, 0]
     y_sod = data_sod[:, 1]
-    np.savetxt('XSPEC',x_sod)
+    np.savetxt('XSPEC', x_sod)
     y_sodT = y_sod[None, :]
-    np.savetxt('SPECTRA',y_sodT)
-    with open('SPECTRA', 'r+') as f:
-        content = f.read()
-        f.seek(0, 0)
-        f.write(args.ZeroFill + '\n')
-        f.close()
+    np.savetxt('ysod', y_sodT)
+    with open('ysod', 'r+') as ysodt:
+        with open('SPECTRA', 'a+') as f:
+            yst = ysodt.read()
+            brk = "\n"
+            spec = args.ZeroFill + brk + yst
+            f.write(spec)
+            f.close()
+        ysodt.close()
+    os.remove('ysod')
 else:
     pass

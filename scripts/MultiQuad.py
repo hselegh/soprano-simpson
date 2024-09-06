@@ -10,29 +10,43 @@ from soprano.calculate.nmr.simpson_multi_quad import *
 from soprano.selection import AtomSelection
 import matplotlib.pyplot as plt
 
-
 import argparse
 
 # Add arguments to the run the script as command line.
 parser = argparse.ArgumentParser()
-parser.add_argument('-m', dest='magres_file', type=str, default="input.magres", help='Magres file name/path. Default: "input.magres".')
-parser.add_argument('-e', dest='element', type=str, help='Element symbol eg. Na, C, O,... No default value, script will not run without it.')
-parser.add_argument('-i', dest='isotope', type=int, help='Isotope number, write as an integer eg. 1, 2, 3,... No default value, script will not run without it.')
-parser.add_argument('-b', dest='field', type=float, default=400.0, help='Magnet field strength in 1H Larmor Frequency and MHz.')
-parser.add_argument('-c', dest='cs_iso', type=bool, default=False, help='Chemical shift treaded as isotropic, ie. no CSA.')
-parser.add_argument('-d', dest='det', type=str, default="I1p", help='Can be either "I1p" (I1+ detection operator) or "I1c" (central transition) detection. Integer spins do not have a central transition, so the detection operator must be "I1p". Default: "I1p".')
-parser.add_argument('-np', dest='np', type=str, default="1024", help='Number of points in the simulated FID. Default: "1024".')
-parser.add_argument('-sw', dest='sw', type=str, default="40000", help='Spectral window, increase or decrease this value depending on the width of the signals (be careful with folding or really broad signals). Default: "40000".')
+parser.add_argument('-m', dest='magres_file', type=str, default="input.magres",
+                    help='Magres file name/path. Default: "input.magres".')
+parser.add_argument('-e', dest='element', type=str,
+                    help='Element symbol eg. Na, C, O,... No default value, script will not run without it.')
+parser.add_argument('-i', dest='isotope', type=int,
+                    help='Isotope number, write as an integer eg. 1, 2, 3,... No default value, script will not run without it.')
+parser.add_argument('-b', dest='field', type=float, default=400.0,
+                    help='Magnet field strength in 1H Larmor Frequency and MHz.')
+parser.add_argument('-c', dest='cs_iso', type=bool, default=False,
+                    help='Chemical shift treaded as isotropic, ie. no CSA.')
+parser.add_argument('-d', dest='det', type=str, default="I1p",
+                    help='Can be either "I1p" (I1+ detection operator) or "I1c" (central transition) detection. Integer spins do not have a central transition, so the detection operator must be "I1p". Default: "I1p".')
+parser.add_argument('-np', dest='np', type=str, default="1024",
+                    help='Number of points in the simulated FID. Default: "1024".')
+parser.add_argument('-sw', dest='sw', type=str, default="40000",
+                    help='Spectral window, increase or decrease this value depending on the width of the signals (be careful with folding or really broad signals). Default: "40000".')
 parser.add_argument('-mas', dest='mas', type=str, default="10000", help='MAS rate. Default: "10000".')
-parser.add_argument('-cr', dest='crystal_file', type=str, default="rep168", help='Crystal file for sampling powder orientation. Default: "rep168".')
-parser.add_argument('-g', dest='gamma', type=str, default="40", help='Number of gamma angles, for MAS use between 30-50 and for static use 1. Default: "40".')
-parser.add_argument('-gQ', dest='gradQ', type=float, default="1.0", help='Gradient for Cq, used in case of over or underestimation. This value will DIVIDE all the Cq values in the .magres file. Default value: "1.0".')
+parser.add_argument('-cr', dest='crystal_file', type=str, default="rep168",
+                    help='Crystal file for sampling powder orientation. Default: "rep168".')
+parser.add_argument('-g', dest='gamma', type=str, default="40",
+                    help='Number of gamma angles, for MAS use between 30-50 and for static use 1. Default: "40".')
+parser.add_argument('-gQ', dest='gradQ', type=float, default="1.0",
+                    help='Gradient for Cq, used in case of over or underestimation. This value will DIVIDE all the Cq values in the .magres file. Default value: "1.0".')
 parser.add_argument('-lb', dest='LB', type=str, default="100", help='Line broadening (in Hz). Default value: "100".')
 parser.add_argument('-zf', dest='ZeroFill', type=str, default="8192", help='Zero filling. Default value: "8192".')
-parser.add_argument('-xy', dest='outXY', type=str, default="simpson.xy", help='Name and path for the .xy output. Default: "simpson.xy".')
-parser.add_argument('-p', dest='plot', type=bool, default=False, help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
-parser.add_argument('-core', dest='cores', type=str, default="8", help='Define the number of cores that Simpson will use. Default: "8".')
-parser.add_argument('-sod', dest='sod', type=bool, default=False, help='Choose if write the files XSPEC and SPECTRA for use in the SOD package, write as True or False. Default: "False".')
+parser.add_argument('-xy', dest='outXY', type=str, default="simpson.xy",
+                    help='Name and path for the .xy output. Default: "simpson.xy".')
+parser.add_argument('-p', dest='plot', type=bool, default=False,
+                    help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
+parser.add_argument('-core', dest='cores', type=str, default="8",
+                    help='Define the number of cores that Simpson will use. Default: "8".')
+parser.add_argument('-sod', dest='sod', type=bool, default=False,
+                    help='Choose if write the files XSPEC and SPECTRA for use in the SOD package, write as True or False. Default: "False".')
 args = parser.parse_args()
 
 # Read .magres file - you can change "args.magres_file" to a default file name using 'filename'.
@@ -90,37 +104,39 @@ magres_sel = AtomSelection.from_element(magres, args.element).subset(magres)
 #
 # gradQ(float) = gradient for Cq. Value that will DIVIDE the Cq values in the .magres file.
 
-write_spinsys_multi_quad(magres_sel, isotope=args.isotope, field=args.field, atomsys=args.element, ms_iso=args.cs_iso, q_order=2, path='simpson.spinsys', ref=references, grad=gradients, gradQ=args.gradQ)
+write_spinsys_multi_quad(magres_sel, isotope=args.isotope, field=args.field, atomsys=args.element, ms_iso=args.cs_iso,
+                         q_order=2, path='simpson.spinsys', ref=references, grad=gradients, gradQ=args.gradQ)
 
 # Add the spin system file to the SIMPSON input.
 simp = SimpsonSequenceMultiQuad('simpson.spinsys')
-h_freq = str(args.field*1000000.0)
+h_freq = str(args.field * 1000000.0)
 
 # To edit the parameters section in the SIMPSON input.
-simp.pars ={
-    "proton_frequency": h_freq, # Spectrometer 1H frequency. This value must be equal to the "field" variable above.
-    "method": "direct", # Do not change.
-    "start_operator": "I1x", # Starting operator for an ideal excitation.
-    "detect_operator": args.det, # Can be either "I1p" (I1+ detection operator) or "I1c" (central transition) detection.
-                                # Integer spins does not have central transitions,
-                                     # so detection operator must be "I1p".
-    "np": args.np, # Number of points in the simulated FID.
-    "sw": args.sw, # Spectral window, increase or decrease this value depending on
-                    # the width of the signals (be careful with folding or really broad signals).
-    "spin_rate": args.mas, # MAS rate.
-    "num_cores": args.cores,   # Uncomment if need to set a fixed number of cores. It will run in all cores as default.
-    "crystal_file": args.crystal_file, # Crystal file for sampling orientation,
-                                # use either rep168 or rep320 for good MAS lineshape simulation. Rep678 or rep2000 may
-                                # be needed depending on the Cq.
-    "verbose": "111", # Do not change.
-    "gamma_angles": args.gamma, # Number of gamma angles, for MAS use between 30-50.
-    "variable": "tdwell     1.0e6/sw" # Do not change.
+simp.pars = {
+    "proton_frequency": h_freq,  # Spectrometer 1H frequency. This value must be equal to the "field" variable above.
+    "method": "direct",  # Do not change.
+    "start_operator": "I1x",  # Starting operator for an ideal excitation.
+    "detect_operator": args.det,
+    # Can be either "I1p" (I1+ detection operator) or "I1c" (central transition) detection.
+    # Integer spins does not have central transitions,
+    # so detection operator must be "I1p".
+    "np": args.np,  # Number of points in the simulated FID.
+    "sw": args.sw,  # Spectral window, increase or decrease this value depending on
+    # the width of the signals (be careful with folding or really broad signals).
+    "spin_rate": args.mas,  # MAS rate.
+    "num_cores": args.cores,  # Uncomment if need to set a fixed number of cores. It will run in all cores as default.
+    "crystal_file": args.crystal_file,  # Crystal file for sampling orientation,
+    # use either rep168 or rep320 for good MAS lineshape simulation. Rep678 or rep2000 may
+    # be needed depending on the Cq.
+    "verbose": "111",  # Do not change.
+    "gamma_angles": args.gamma,  # Number of gamma angles, for MAS use between 30-50.
+    "variable": "tdwell     1.0e6/sw"  # Do not change.
 }
 
 # To edit the pulse section in the SIMPSON input. Default gives a perfect excitation (I1x) - no pulse simulation.
-PulseSeq={
-        "pars": {},
-        "pulseq": """
+PulseSeq = {
+    "pars": {},
+    "pulseq": """
    global par
 
     reset
@@ -130,9 +146,9 @@ PulseSeq={
          acq
         }
 """,
-        "main": """
+    "main": """
 """,
-    }
+}
 
 simp.apply_template(PulseSeq)
 
@@ -158,7 +174,7 @@ else:
     data = np.loadtxt(args.outXY)
     x = data[:, 0]
     y = data[:, 1]
-    plt.plot(x, y,'r')
+    plt.plot(x, y, 'r')
     plt.show()
 
 # Creates the files XSPEC and SPECTRA to be used in SOD (https://github.com/gcmt-group/sod).
@@ -166,13 +182,17 @@ if args.sod is True:
     data_sod = np.loadtxt(args.outXY)
     x_sod = data_sod[:, 0]
     y_sod = data_sod[:, 1]
-    np.savetxt('XSPEC',x_sod)
+    np.savetxt('XSPEC', x_sod)
     y_sodT = y_sod[None, :]
-    np.savetxt('SPECTRA',y_sodT)
-    with open('SPECTRA', 'r+') as f:
-        content = f.read()
-        f.seek(0, 0)
-        f.write(args.ZeroFill + '\n')
-        f.close()
+    np.savetxt('ysod', y_sodT)
+    with open('ysod', 'r+') as ysodt:
+        with open('SPECTRA', 'a+') as f:
+            yst = ysodt.read()
+            brk = "\n"
+            spec = args.ZeroFill + brk + yst
+            f.write(spec)
+            f.close()
+        ysodt.close()
+    os.remove('ysod')
 else:
     pass
