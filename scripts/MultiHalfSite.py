@@ -163,24 +163,25 @@ for xsite in range(1,nsites+1):
         plt.show()
 
     # Creates the files XSPEC and SPECTRA to be used in SOD (https://github.com/gcmt-group/sod).
-    if args.sod is True:
-        data_sod = np.loadtxt(args.outXY + '_' + str(xsite) + '.xy')
-        x_sod = data_sod[:, 0]
-        y_sod = data_sod[:, 1]
-        np.savetxt('XSPEC', x_sod)
-        y_sodT = y_sod[None, :]
-        np.savetxt('ysod', y_sodT)
-        with open('ysod', 'r+') as ysodt:
-            with open('SPECTRA', 'a+') as f:
-                yst = ysodt.read()
-                brk = "\n"
-                spec = args.ZeroFill + brk + yst
-                f.write(spec)
-                f.close()
-            ysodt.close()
-        os.remove('ysod')
-    else:
-        pass
+    # Uncomment if needed - by some reason...
+    #if args.sod is True:
+    #    data_sod = np.loadtxt(args.outXY + '_' + str(xsite) + '.xy')
+    #    x_sod = data_sod[:, 0]
+    #    y_sod = data_sod[:, 1]
+    #    np.savetxt('XSPEC', x_sod)
+    #    y_sodT = y_sod[None, :]
+    #    np.savetxt('ysod', y_sodT)
+    #    with open('ysod', 'r+') as ysodt:
+    #        with open('SPECTRA', 'a+') as f:
+    #            yst = ysodt.read()
+    #            brk = "\n"
+    #            spec = args.ZeroFill + brk + yst
+    #            f.write(spec)
+    #            f.close()
+    #        ysodt.close()
+    #    os.remove('ysod')
+    #else:
+    #    pass
 
 # Sums all the sites spectra and generates a .xy file
 if args.sum is True:
