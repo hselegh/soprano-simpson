@@ -45,9 +45,8 @@ parser.add_argument('-p', dest='plot', type=bool, default=False,
                     help='Choose if plot or not the spectrum using pyplot at the end of the execution, write as True or False. Default: "False".')
 parser.add_argument('-core', dest='cores', type=str, default="8",
                     help='Define the number of cores that Simpson will use. Default: "8".')
-parser.add_argument('-sodsite', dest='sodsite', type=bool, default=False,
-                    help='Choose if write the files XSPEC and SPECTRA for each site for use in the SOD package, write as True or False. Default: "False".')
-parser.add_argument('-sodsum', dest='sodsum', type=bool, default=False,
+#parser.add_argument('-sodsite', dest='sodsite', type=bool, default=False, help='Choose if write the files XSPEC and SPECTRA for each site for use in the SOD package, write as True or False. Default: "False".')
+parser.add_argument('-sod', dest='sodsum', type=bool, default=False,
                     help='Choose if write the files XSPEC and SPECTRA for the spectra sum for use in the SOD package, write as True or False. Default: "False".')
 parser.add_argument('-sum', dest='sum', type=bool, default=True,
                     help='Choose if sums the .xy files generated for each site creating a .xy file, write as True or False. Default: "True".')
@@ -233,7 +232,7 @@ else:
     pass
 
 # Creates the files XSPEC and SPECTRA for the spectra sum to be used in SOD (https://github.com/gcmt-group/sod).
-if args.sodsite is True:
+if args.sod is True:
     data_sod_sum = np.loadtxt(args.outXY + '_sum.xy')
     x_sod_sum = data_sod_sum[:, 0]
     y_sod_sum = data_sod_sum[:, 1]
